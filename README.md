@@ -1,14 +1,40 @@
-# Packet Capture Script
+# Packet Capture and DDoS Analyzer Script
 
-This is a shell script that captures network traffic on a given network interface and stores it in a file. The script is useful for detecting network attacks and analyzing network traffic. You will need to have `tcpdump` installed on your Linux machine.
+This is a shell script that captures network traffic on a given network interface and stores it in a file. The script is useful for detecting network attacks and analyzing network traffic. It integrates with a Python script that processes the packet captures, detects potential DDoS attacks, and generates iptables rules to block the malicious traffic. You will need to have `tcpdump` installed on your Linux machine and the required Python packages.
 
-## Usage
+# Requirements
+
+* Python 3.x
+* tcpdump
+* pandas
+* numpy
+* scikit-learn
+* scapy
+
+# Installation
+
+1. Install the required Python packages:
+```pip install pandas numpy scikit-learn scapy```
+
+2. Install tcpdump
+
+## On Debian/Ubuntu: 
+ 
+ `sudo apt-get install tcpdump`
+
+## On CentOS/RHEL: 
+ 
+ `sudo yum install tcpdump`
+
+# Usage
 
 1. Copy the script to a Linux machine.
 2. Edit the configurable parameters at the beginning of the script to match your needs.
 3. Run the script with `sudo` or as root.
 
-## Configuration
+`sudo ./capture.sh`
+
+# Configuration
 
 The following configurable parameters can be edited at the beginning of the script:
 
@@ -19,7 +45,7 @@ The following configurable parameters can be edited at the beginning of the scri
 * `capture_duration`: The duration of the packet capture in seconds.
 * `webhook_url`: The URL of the Discord webhook to send messages and packet captures to.
 
-## Customization
+# Customization
 
 The script can be customized in the following ways:
 
