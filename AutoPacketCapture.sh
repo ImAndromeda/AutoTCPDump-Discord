@@ -29,6 +29,16 @@ while true; do
         kill -HUP $capture_pid >/dev/null 2>&1
         log "Packets captured."
         curl -H "Content-Type: application/octet-stream" -X POST --data-binary "@$dumpdir/dump.$(date +"%Y%m%d-%H%M%S").pcap" $webhook_url >/dev/null 2>&1
+
+        # Call the Python script to analyze the captured packets
+        log "Analyzing packets and generating rules..."
+        python3 ddos_analyzer.py $dumpdir/dump.$(date +"%Y%m%d-%H%M%S").pcap /tmp/rules.txt
+
+        # Apply the generated rules (e.g., using iptables)
+        log "Applying generated rules..."
+        while read -r rule; do
+            iptables -A INPUT $rule
+        done < /tmp/rules.txt
     else
         sleep 1
     fi
