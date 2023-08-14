@@ -1,30 +1,30 @@
 # Packet Capture and DDoS Analyzer Script
 
-This is a shell script that captures network traffic on a given network interface and stores it in a file. The script is useful for detecting network attacks and analyzing network traffic. It integrates with a Python script that processes the packet captures, detects potential DDoS attacks, and generates iptables rules to block the malicious traffic. You will need to have `tcpdump` installed on your Linux machine and the required Python packages.
+This is a shell script that captures network traffic on a given network interface and stores it in a file. The script is designed to detect network attacks and analyze network traffic. It integrates with a Python script that processes the packet captures, detects potential DDoS attacks, and generates iptables rules to block the malicious traffic. For the script to run successfully, `tcpdump` should be installed on your Linux machine along with the necessary Python packages.
+
+# Download Here: [GitHub Repository](https://github.com/ImAndromeda/AutoTCPDump-Discord)
+
+## For any issues, please create an issue on this repo
 
 # Requirements
 
 * Python 3.x
 * tcpdump
-* pandas
-* numpy
 * scikit-learn
 * scapy
 
 # Installation
 
 1. Install the required Python packages:
-```pip install pandas numpy scikit-learn scapy```
+```pip install scikit-learn scapy```
 
-2. Install tcpdump
+2. Install tcpdump:
 
 ## On Debian/Ubuntu: 
- 
- `sudo apt-get install tcpdump`
+`sudo apt-get install tcpdump`
 
 ## On CentOS/RHEL: 
- 
- `sudo yum install tcpdump`
+`sudo yum install tcpdump`
 
 # Usage
 
@@ -43,15 +43,15 @@ The following configurable parameters can be edited at the beginning of the scri
 * `max_packets`: The maximum number of packets to capture before stopping.
 * `attack_threshold`: The threshold for detecting a network attack. If the number of packets per second exceeds this threshold, the script will capture packets.
 * `capture_duration`: The duration of the packet capture in seconds.
-* `webhook_url`: The URL of the Discord webhook to send messages and packet captures to.
+* `webhook_url`: The URL of the Discord webhook to send messages and packet captures to. This should ideally be moved to a configuration file for security purposes.
 
 # Customization
 
-The script can be customized in the following ways:
+The script can be customized in various ways:
 
 * Change the `interface` parameter to capture traffic on a different network interface.
-* Change the `dumpdir` parameter to store captured packet files in a different directory.
+* Modify the `dumpdir` parameter to store captured packet files in a different directory.
 * Adjust the `max_packets` and `capture_duration` parameters to capture more or less traffic.
-* Change the `attack_threshold` parameter to detect attacks with a different packet rate threshold.
-* Modify the `log()` function to send notifications to different channels or services.
-* Add additional functionality to the script, such as analyzing captured packets or running other security tools.
+* Modify the `attack_threshold` parameter to detect attacks with a different packet rate threshold.
+* Customize the `log()` function to send notifications to different channels or services.
+* Extend the script by adding more functionalities, like deeper packet analysis or integration with other security tools.
