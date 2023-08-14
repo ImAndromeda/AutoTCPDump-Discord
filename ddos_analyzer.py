@@ -1,7 +1,4 @@
 import sys
-import os
-import pandas as pd
-import numpy as np
 from scapy.all import *
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
@@ -17,34 +14,31 @@ def process_pcap(pcap_file):
             packet_size = len(packet)
             timestamp = packet.time
             data.append([src_ip, dest_ip, packet_size, timestamp])
-        except IndexError:
+        except (IndexError, AttributeError):
             pass
 
-    return pd.DataFrame(data, columns=['src_ip', 'dest_ip', 'packet_size', 'timestamp'])
+    return data
 
-def detect_ddos_attacks(df, eps=0.5, min_samples=5):
-    features = df[['packet_size', 'timestamp']].values
+def detect_ddos_attacks(data, eps=0.5, min_samples=5):
+    df_src_ip = [row[0] for row in data]
+    features = [[row[2], row[3]] for row in data]
     features = StandardScaler().fit_transform(features)
 
     db = DBSCAN(eps=eps, min_samples=min_samples).fit(features)
     labels = db.labels_
-    df['cluster'] = labels
 
-    attack_clusters = df[df['cluster'] != -1].groupby('cluster').filter(lambda x: len(x) > min_samples)
-    src_ips = attack_clusters['src_ip'].unique()
+    src_ips = [df_src_ip[i] for i, label in enumerate(labels) if label != -1]
+    unique_src_ips = list(set(src_ips))
 
-    rules = []
-    for ip in src_ips:
-        rules.append(f"-s {ip} -j DROP")
-
+    rules = [f"-s {ip} -j DROP" for ip in unique_src_ips]
     return rules
 
 if __name__ == '__main__':
     pcap_file = sys.argv[1]
     output_file = sys.argv[2]
 
-    df = process_pcap(pcap_file)
-    rules = detect_ddos_attacks(df)
+    data = process_pcap(pcap_file)
+    rules = detect_ddos_attacks(data)
 
     with open(output_file, 'w') as f:
         for rule in rules:
