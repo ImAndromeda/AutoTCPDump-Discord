@@ -2,6 +2,8 @@
 
 This is a shell script that captures network traffic on a given network interface and stores it in a file. The script is designed to detect network attacks and analyze network traffic. It integrates with a Python script that processes the packet captures, detects potential DDoS attacks, and generates iptables rules to block the malicious traffic. For the script to run successfully, `tcpdump` should be installed on your Linux machine along with the necessary Python packages.
 
+Please note, this project is Beta and may include bugs/issues. 
+
 ## For any problem, please create an [issue](https://github.com/ImAndromeda/AutoTCPDump-Discord/issues/new)
 
 # Requirements
