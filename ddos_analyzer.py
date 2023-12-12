@@ -1,4 +1,5 @@
 import sys
+import logging
 from scapy.all import *
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
@@ -14,8 +15,9 @@ def process_pcap(pcap_file):
             packet_size = len(packet)
             timestamp = packet.time
             data.append([src_ip, dest_ip, packet_size, timestamp])
-        except (IndexError, AttributeError):
-            pass
+        except (IndexError, AttributeError) as e:
+            logging.error(f"Error processing packet: {e}")
+            continue
 
     return data
 
