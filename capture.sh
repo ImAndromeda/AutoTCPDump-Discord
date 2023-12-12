@@ -5,8 +5,8 @@ interface=eth0
 dumpdir=/root/
 max_packets=20000
 attack_threshold=30000
-capture_duration=300 # This is in seconds (5 minutes)
-webhook_url="https://discord.com/api/webhooks/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+capture_duration=300 # seconds
+webhook_url="https://discord.com/api/webhooks/..."
 
 # Logging function
 log() {
@@ -30,20 +30,20 @@ while true; do
     echo -ne "\\r$pkt packets/s\\033[0K"
 
     if [ $pkt -gt $attack_threshold ]; then
-        filename=$dumpdir/dump.$(date +"%Y%m%d-%H%M%S").pcap
+        pcap_filename=$dumpdir/dump.$(date +"%Y%m%d-%H%M%S").pcap
         log "Under attack. Capturing packets..."
-        sudo tcpdump -n -i $interface -s0 -c $max_packets -w $filename >/dev/null 2>&1 &
+        sudo tcpdump -n -i $interface -s0 -c $max_packets -w $pcap_filename >/dev/null 2>&1 &
         capture_pid=$!
         sleep $capture_duration
         kill -HUP $capture_pid >/dev/null 2>&1
         log "Packets captured."
-        curl -H "Content-Type: application/octet-stream" -X POST --data-binary "@$dumpdir/dump.$(date +"%Y%m%d-%H%M%S").pcap" $webhook_url >/dev/null 2>&1
+        curl -H "Content-Type: application/octet-stream" -X POST --data-binary "@$pcap_filename" $webhook_url >/dev/null 2>&1
 
         # Call the Python script to analyze the captured packets
         log "Analyzing packets and generating rules..."
-        python3 ddos_analyzer.py $filename /tmp/rules.txt
+        python3 ddos_analyzer.py $pcap_filename /tmp/rules.txt
 
-        # Apply the generated rules (e.g., using iptables)
+        # Apply the generated rules
         log "Applying generated rules..."
         while read -r rule; do
             iptables -A INPUT $rule
