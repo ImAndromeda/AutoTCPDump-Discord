@@ -3,9 +3,9 @@
 # Configurable parameters
 interface=eth0
 dumpdir=/root/
-max_packets=20000
+max_packets=15000
 attack_threshold=30000
-capture_duration=300 # seconds
+capture_duration=30 # seconds
 webhook_url="https://discord.com/api/webhooks/..."
 
 # Logging function
